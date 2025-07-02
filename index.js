@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import Retell from 'retell-sdk';
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -31,9 +32,6 @@ app.get('/', (req, res) => {
 app.post('/create-web-call', async (req, res) => {
   try {
     console.log('Creating web call...');
-    
-    // Import Retell SDK - fixed import method
-    const Retell = (await import('retell-sdk')).default;
     
     const retellClient = new Retell({
       apiKey: process.env.RETELL_API_KEY,
