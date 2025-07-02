@@ -32,8 +32,8 @@ app.post('/create-web-call', async (req, res) => {
   try {
     console.log('Creating web call...');
     
-    // Import Retell SDK dynamically
-    const { default: Retell } = await import('retell-sdk');
+    // Import Retell SDK - fixed import method
+    const Retell = (await import('retell-sdk')).default;
     
     const retellClient = new Retell({
       apiKey: process.env.RETELL_API_KEY,
