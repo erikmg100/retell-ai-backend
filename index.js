@@ -27,18 +27,39 @@ app.get('/', (req, res) => {
   });
 });
 
-// Simple test endpoint first
+// Create web call endpoint with Retell integration
 app.post('/create-web-call', async (req, res) => {
   try {
+    console.log('Creating web call...');
+    
+    // Import Retell SDK dynamically
+    const { default: Retell } = await import('retell-sdk');
+    
+    const retellClient = new Retell({
+      apiKey: process.env.RETELL_API_KEY,
+    });
+
+    // Create web call using Retell SDK
+    const webCallResponse = await retellClient.call.createWebCall({
+      agent_id: 'agent_5dd51015619e030d2022ab251e',
+      ...req.body
+    });
+
+    console.log('Web call created successfully:', webCallResponse.call_id);
+    
+    // Return the access token and call details
     res.json({
       success: true,
-      message: 'Endpoint working, but Retell integration disabled for testing',
-      timestamp: new Date().toISOString()
+      access_token: webCallResponse.access_token,
+      call_id: webCallResponse.call_id,
+      agent_id: webCallResponse.agent_id
     });
+
   } catch (error) {
+    console.error('Error creating web call:', error);
     res.status(500).json({
       success: false,
-      error: error.message
+      error: error.message || 'Failed to create web call'
     });
   }
 });
