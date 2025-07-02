@@ -1,6 +1,5 @@
 import express from 'express';
 import cors from 'cors';
-import Retell from 'retell-sdk';
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -28,21 +27,30 @@ app.get('/', (req, res) => {
   });
 });
 
-// Create web call endpoint with Retell integration
+// Create web call endpoint using direct API call
 app.post('/create-web-call', async (req, res) => {
   try {
     console.log('Creating web call...');
     
-    const retellClient = new Retell({
-      apiKey: process.env.RETELL_API_KEY,
+    // Direct API call to Retell instead of using SDK
+    const response = await fetch('https://api.retellai.com/v2/create-web-call', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${process.env.RETELL_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        agent_id: 'agent_5dd51015619e030d2022ab251e',
+        ...req.body
+      })
     });
 
-    // Create web call using Retell SDK
-    const webCallResponse = await retellClient.call.createWebCall({
-      agent_id: 'agent_5dd51015619e030d2022ab251e',
-      ...req.body
-    });
+    if (!response.ok) {
+      throw new Error(`Retell API error: ${response.status} ${response.statusText}`);
+    }
 
+    const webCallResponse = await response.json();
+    
     console.log('Web call created successfully:', webCallResponse.call_id);
     
     // Return the access token and call details
