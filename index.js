@@ -1,9 +1,7 @@
 import express from 'express';
 import cors from 'cors';
-
 const app = express();
 const port = process.env.PORT || 3001;
-
 // Configure CORS
 app.use(cors({
   origin: [
@@ -15,9 +13,7 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
-
 app.use(express.json());
-
 // Health check endpoint
 app.get('/', (req, res) => {
   res.json({ 
@@ -26,7 +22,6 @@ app.get('/', (req, res) => {
     env_check: process.env.RETELL_API_KEY ? 'API key found' : 'API key missing'
   });
 });
-
 // Create web call endpoint using direct API call
 app.post('/create-web-call', async (req, res) => {
   try {
@@ -40,15 +35,13 @@ app.post('/create-web-call', async (req, res) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        agent_id: 'agent_5dd51015619e030d2022ab251e',
+        agent_id: 'agent_a6915efc7c8d27c2170a41a2d4',
         ...req.body
       })
     });
-
     if (!response.ok) {
       throw new Error(`Retell API error: ${response.status} ${response.statusText}`);
     }
-
     const webCallResponse = await response.json();
     
     console.log('Web call created successfully:', webCallResponse.call_id);
@@ -68,9 +61,7 @@ app.post('/create-web-call', async (req, res) => {
     });
   }
 });
-
 app.options('*', cors());
-
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
