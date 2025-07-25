@@ -7,7 +7,7 @@ const port = process.env.PORT || 3001;
 // Configure CORS
 app.use(cors({
   origin: [
-    'https://frontend-eight-zeta-72.vercel.app',
+    'https://retell-wordpress.vercel.app',
     'http://localhost:3000',
     'http://localhost:5173'
   ],
@@ -60,7 +60,6 @@ app.post('/create-web-call', async (req, res) => {
       call_id: webCallResponse.call_id,
       agent_id: webCallResponse.agent_id
     });
-
   } catch (error) {
     console.error('Error creating web call:', error);
     res.status(500).json({
